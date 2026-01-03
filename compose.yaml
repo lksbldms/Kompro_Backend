@@ -1,9 +1,15 @@
 services:
   postgres:
-    image: 'postgres:latest'
+    image: 'postgres:15-alpine'
+    container_name: kompro-db
     environment:
-      - 'POSTGRES_DB=mydatabase'
-      - 'POSTGRES_PASSWORD=secret'
-      - 'POSTGRES_USER=myuser'
+      - 'POSTGRES_DB=kompro_db'
+      - 'POSTGRES_USER=admin'
+      - 'POSTGRES_PASSWORD=kompro_password'
     ports:
-      - '5432'
+      - '5432:5432'
+    volumes:
+      - kompro_db_data:/var/lib/postgresql/data
+
+volumes:
+  kompro_db_data:

@@ -1,27 +1,59 @@
-# Compiled class file
-*.class
+############################
+# IntelliJ / JetBrains
+############################
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
 
-# Log file
+############################
+# OS
+############################
+.DS_Store
+Thumbs.db
+
+############################
+# Build
+############################
+build/
+target/
+bin/
+
+############################
+# Gradle
+############################
+.gradle/
+!gradle/wrapper/gradle-wrapper.jar
+gradle-app.setting
+gradle-app.properties
+
+############################
+# Maven
+############################
+.mvn/
+dependency-reduced-pom.xml
+
+############################
+# Logs & Runtime
+############################
 *.log
-
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+logs/
 hs_err_pid*
 replay_pid*
 
-# Kotlin Gradle plugin data, see https://kotlinlang.org/docs/whatsnew20.html#new-directory-for-kotlin-data-in-gradle-projects
+############################
+# Kotlin
+############################
 .kotlin/
+
+############################
+# Spring Boot configs / secrets
+############################
+*.env
+.env.*
+application-local.yml
+application-local.yaml
+application-local.properties
+
+########################
