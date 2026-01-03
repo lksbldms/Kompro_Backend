@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: kompro_backend
+
+  # Datenbank-Verbindung (Optimiert für Docker)
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:5432/kompro_db
+    username: ${DB_USER:admin}
+    password: ${DB_PASS:safe_password_123}
+    driver-class-name: org.postgresql.Driver
+
+  # JPA & Hibernate Einstellungen
+  jpa:
+    hibernate:
+      ddl-auto: update # Erstellt Tabellen automatisch basierend auf deinen Entities
+    show-sql: true # Hilfreich für die Entwicklung, um SQL in der Konsole zu sehen
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  # Security & Mail (Platzhalter für später)
+  mail:
+    host: smtp.example.com
+    port: 587
+
+# Swagger / OpenAPI Dokumentation
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
