@@ -1,3 +1,5 @@
+package de.bazi.kompro_backend.config
+
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -13,22 +15,20 @@ class SecurityConfig {
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http
             .csrf { it.disable() }
-            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) } // Wichtig für Stateless APIs
+            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests { auth ->
                 auth
                     .requestMatchers(
-                        "/v3/api-docs/**",
-                        "/v3/api-docs.yaml",
+                        "/",                         // optional
                         "/swagger-ui/**",
                         "/swagger-ui.html",
-                        "/webjars/**",
-                        "/swagger-resources/**"
+                        "/v3/api-docs/**",
+                        "/webjars/**"
                     ).permitAll()
                     .anyRequest().authenticated()
             }
-            // Wir schalten die Standard-Logins komplett aus
             .formLogin { it.disable() }
-            .httpBasic { it.disable() }
+            .httpBasic { }
 
         return http.build()
     }

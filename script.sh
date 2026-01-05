@@ -1,40 +1,36 @@
 #!/bin/zsh
 BASE="src/main/kotlin/info/kompro"
 
-# Liste deiner tatsächlichen Kompro-Entities
-ENTITIES=(
-  "Account" 
-  "User" 
-  "AuthToken" 
-  "RatingPattern" 
-  "RatingChoice" 
-  "CompetenceArea" 
-  "SharedTemplate" 
-  "Competence" 
-  "Item" 
-  "RatingSession" 
-  "Rating"
+# Die 8 Repositories aus deinem Chat-Verlauf
+declare -A REPOS
+REPOS=(
+  ["UserRepository"]="User"
+  ["CompetenceAreaRepository"]="CompetenceArea"
+  ["RatingSessionRepository"]="RatingSession"
+  ["RatingRepository"]="Rating"
+  ["AuthTokenRepository"]="AuthToken"
+  ["CompetenceRepository"]="Competence"
+  ["ItemRepository"]="Item"
+  ["RatingPatternRepository"]="RatingPattern"
 )
 
-# Ordner sicherstellen
-mkdir -p "$BASE/service" "$BASE/controller"
-
-for ENTITY in "${ENTITIES[@]}"; do
-  # URL-Format (CamelCase -> kebab-case)
+for REPO in "${(@k)REPOS}"; do
+  ENTITY="${REPOS[$REPO]}"
+  # Pfad-Formatierung (z.B. CompetenceArea -> competence-areas)
   LOWER=$(echo "$ENTITY" | sed 's/\([a-z0-9]\)\([A-Z]\)/\1-\2/g' | tr '[:upper:]' '[:lower:]')
   
-  # 1. Service erstellen (Standard CRUD)
+  # Service erstellen
   cat <<EOF > "$BASE/service/${ENTITY}Service.kt"
 package info.kompro.service
 
 import info.kompro.entity.${ENTITY}
-import info.kompro.repository.${ENTITY}Repository
+import info.kompro.repository.${REPO}
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
 
 @Service
-class ${ENTITY}Service(private val repository: ${ENTITY}Repository) {
+class ${ENTITY}Service(private val repository: ${REPO}) {
     fun findAll(): List<${ENTITY}> = repository.findAll()
     fun findById(id: UUID): ${ENTITY}? = repository.findById(id).orElse(null)
     
@@ -46,7 +42,7 @@ class ${ENTITY}Service(private val repository: ${ENTITY}Repository) {
 }
 EOF
 
-  # 2. Controller erstellen (REST API)
+  # Controller erstellen
   cat <<EOF > "$BASE/controller/${ENTITY}Controller.kt"
 package info.kompro.controller
 
@@ -60,13 +56,13 @@ import java.util.UUID
 class ${ENTITY}Controller(private val service: ${ENTITY}Service) {
 
     @GetMapping
-    fun getAll(): List<${ENTITY}> = service.findAll()
+    fun getAll() = service.findAll()
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable id: UUID): ${ENTITY}? = service.findById(id)
+    fun getById(@PathVariable id: UUID) = service.findById(id)
 
     @PostMapping
-    fun create(@RequestBody entity: ${ENTITY}): ${ENTITY} = service.save(entity)
+    fun create(@RequestBody entity: ${ENTITY}) = service.save(entity)
 
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: UUID) = service.deleteById(id)
@@ -74,4 +70,4 @@ class ${ENTITY}Controller(private val service: ${ENTITY}Service) {
 EOF
 done
 
-echo "✅ Services und Controller für alle Kompro-Entities erfolgreich erstellt!"
+echo "✅ Services und Controller für deine 8 Repositories wurden erstellt!"
