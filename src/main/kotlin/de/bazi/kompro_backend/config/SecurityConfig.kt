@@ -16,7 +16,6 @@ class SecurityConfig {
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) } // Wichtig für Stateless APIs
             .authorizeHttpRequests { auth ->
                 auth
-                    // Erlaubt alle Swagger & OpenAPI Ressourcen explizit
                     .requestMatchers(
                         "/v3/api-docs/**",
                         "/v3/api-docs.yaml",
