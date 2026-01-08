@@ -1,19 +1,31 @@
 package de.bazi.kompro_backend.service
 
-import de.bazi.kompro_backend.entity.RatingPattern
+import de.bazi.kompro_backend.entity.*
+import de.bazi.kompro_backend.dto.RatingPatternRequest
 import de.bazi.kompro_backend.repository.RatingPatternRepository
+import de.bazi.kompro_backend.repository.UserRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
 
 @Service
-class RatingPatternService(private val repository: RatingPatternRepository) {
+class RatingPatternService(
+    private val repository: RatingPatternRepository,
+    private val userRepository: UserRepository
+) {
     fun findAll(): List<RatingPattern> = repository.findAll()
-    fun findById(id: UUID): RatingPattern? = repository.findById(id).orElse(null)
-    
+
     @Transactional
-    fun save(entity: RatingPattern): RatingPattern = repository.save(entity)
-    
-    @Transactional
-    fun deleteById(id: UUID) = repository.deleteById(id)
+    fun create(dto: RatingPatternRequest): RatingPattern {
+        val owner = userRepository.findById(dto.ownerId).orElseThrow()
+        val pattern = RatingPattern(
+            owner = owner,
+            name = dto.name,
+            description = dto.description
+        )
+        dto.choices.forEach { cDto ->
+            pattern.choices.add(RatingChoice(pattern = pattern, label = cDto.label, value = cDto.value))
+        }
+        return repository.save(pattern)
+    }
 }
