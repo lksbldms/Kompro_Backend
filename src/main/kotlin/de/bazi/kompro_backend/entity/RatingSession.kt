@@ -1,5 +1,6 @@
 package de.bazi.kompro_backend.entity
 import jakarta.persistence.*
+
 @Entity
 @Table(name = "rating_sessions")
 class RatingSession(
@@ -13,7 +14,9 @@ class RatingSession(
         joinColumns = [JoinColumn(name = "session_id")],
         inverseJoinColumns = [JoinColumn(name = "inspector_id")]
     )
-    val inspectors: MutableSet<User> = mutableSetOf()
+    val inspectors: MutableSet<User> = mutableSetOf(),
+    @OneToMany(mappedBy = "session", cascade = [CascadeType.ALL])
+    val ratings: MutableList<Rating> = mutableListOf(),
 ) : BaseEntity()
 
 enum class SessionStatus { OPEN, CLOSED }
