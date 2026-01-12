@@ -1,16 +1,22 @@
 package de.bazi.kompro_backend.entity
 
 import jakarta.persistence.*
+import java.util.*
 
 @Entity
-@Table(name = "item_ratings")
+@Table(name = "item_results")
 class ItemResult(
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "rating_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "rating_id")
     val rating: Rating,
 
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "item_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_id")
     val item: Item,
 
-    @Column(name = "raw_value") var rawValue: Int,
-    var note: String?
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "rating_choice_id")
+    var choice: RatingChoice,
+
+    var note: String? = null
 ) : BaseEntity()

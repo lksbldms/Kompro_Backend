@@ -1,6 +1,6 @@
 package de.bazi.kompro_backend.controller
 
-import de.bazi.kompro_backend.entity.Rating
+import de.bazi.kompro_backend.dto.RatingRequest
 import de.bazi.kompro_backend.service.RatingService
 import org.springframework.web.bind.annotation.*
 import java.util.UUID
@@ -9,15 +9,10 @@ import java.util.UUID
 @RequestMapping("/api/ratings")
 class RatingController(private val service: RatingService) {
 
-    @GetMapping
-    fun getAll() = service.findAll()
-
-    @GetMapping("/{id}")
-    fun getById(@PathVariable id: UUID) = service.findById(id)
-
     @PostMapping
-    fun create(@RequestBody entity: Rating) = service.save(entity)
+    fun create(@RequestBody dto: RatingRequest) = service.create(dto)
 
     @DeleteMapping("/{id}")
-    fun delete(@PathVariable id: UUID) = service.deleteById(id)
+    fun delete(@PathVariable id: UUID, @RequestParam requesterId: UUID) =
+        service.delete(id, requesterId)
 }
